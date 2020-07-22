@@ -30,12 +30,17 @@ node {
     
     withEnv(["HOME=${env.WORKSPACE}"]) {
         echo 'got here'
+        echo ${SF_INSTANCE_URL}
+        echo ${SF_CONSUMER_KEY}
+        echo ${SF_USERNAME}
+        echo ${SERVER_KEY_CREDENTALS_ID}
+           
         withCredentials([file(credentialsId: SERVER_KEY_CREDENTALS_ID, variable: 'server_key_file')]) {
 
             // -------------------------------------------------------------------------
             // Authorize the Dev Hub org with JWT key and give it an alias.
             // -------------------------------------------------------------------------
-            echo ${SERVER_KEY_CREDENTALS_ID}
+            echo 'got credentials'
             stage('Authorize DevHub') {
                 rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --setalias HubOrg"
                 if (rc != 0) {
