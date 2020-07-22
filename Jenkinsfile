@@ -22,7 +22,6 @@ node {
     stage('checkout source') {
         checkout scm
     }
-    error 'I AM HERE.'
 
     // -------------------------------------------------------------------------
     // Run all the enclosed stages with access to the Salesforce
