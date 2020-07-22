@@ -30,10 +30,10 @@ node {
     
     withEnv(["HOME=${env.WORKSPACE}"]) {
         echo 'got here'
-        echo ${SF_INSTANCE_URL}
-        echo ${SF_CONSUMER_KEY}
-        echo ${SF_USERNAME}
-        echo ${SERVER_KEY_CREDENTALS_ID}
+        println SF_INSTANCE_URL
+        println SF_CONSUMER_KEY
+        println SF_USERNAME
+        println SERVER_KEY_CREDENTALS_ID
            
         withCredentials([file(credentialsId: SERVER_KEY_CREDENTALS_ID, variable: 'server_key_file')]) {
 
