@@ -13,7 +13,7 @@ node {
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://login.salesforce.com"
 
     def toolbelt = tool 'toolbelt'
-    security list-keychains -s ${HOME}/Library/Keychains/login.keychain
+    security list-keychains -s /Users/svittala//Library/Keychains/login.keychain
 
     // -------------------------------------------------------------------------
     // Check out code from source control.
