@@ -53,12 +53,12 @@ node {
             // Create new scratch org to test your code.
             // -------------------------------------------------------------------------
 
-            stage('Create Test Scratch Org') {
-                rc = command "${toolbelt}/sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 --type scratch"
-                if (rc != 0) {
-                    error 'Salesforce test scratch org creation failed.'
-                }
-            }
+           // stage('Create Test Scratch Org') {
+             //   rc = command "${toolbelt}/sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --jwtkeyfile ${KEYFILELOCATION} --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 --type scratch"
+               // if (rc != 0) {
+             //       error 'Salesforce test scratch org creation failed.'
+               // }
+           // }
 
 
             // -------------------------------------------------------------------------
@@ -101,12 +101,12 @@ node {
             // Delete test scratch org.
             // -------------------------------------------------------------------------
 
-            stage('Delete Test Scratch Org') {
-                rc = command "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
-                if (rc != 0) {
-                    error 'Salesforce test scratch org deletion failed.'
-                }
-            }
+           // stage('Delete Test Scratch Org') {
+           //     rc = command "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
+           //     if (rc != 0) {
+           //         error 'Salesforce test scratch org deletion failed.'
+           //     }
+           // }
 
 
             // -------------------------------------------------------------------------
