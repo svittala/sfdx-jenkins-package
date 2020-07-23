@@ -1,8 +1,9 @@
 {
     "orgName": "CI Example",
     "edition": "Developer",
-    "orgPreferences" : {
+    "settings" : {
         "lightningExperienceSettings": {
             "enableS1DesktopEnabled":true
+        }
     }
 }
