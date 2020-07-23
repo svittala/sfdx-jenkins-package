@@ -51,7 +51,7 @@ node {
 
             stage('Create Scratch Org'){
             echo 'combining hub grant and creation of scratchorg'
-            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_INSTANCE_URL}"
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --instanceurl ${SF_INSTANCE_URL}"
             if (rc != 0) { error 'hub org authorization failed' }
 
             // need to pull out assigned username
