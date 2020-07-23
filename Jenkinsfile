@@ -5,7 +5,8 @@ import groovy.json.JsonSlurperClassic
 node {
 
     def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME=env.SF_USERNAME
+    def SF_USERNAME
+    def HUB_ORG=env.SF_USERNAME
     def SERVER_KEY_CREDENTALS_ID=env.SERVER_KEY_CREDENTALS_ID
     def TEST_LEVEL='RunLocalTests'
     def PACKAGE_NAME='0Hof4000000KywZCAS'
@@ -40,15 +41,28 @@ node {
             // -------------------------------------------------------------------------
             // Authorize the Dev Hub org with JWT key and give it an alias.
             // -------------------------------------------------------------------------
-            echo 'got credentials'
-            stage('Authorize DevHub') {
-                rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${KEYFILELOCATION}  --setdefaultdevhubusername --setalias HubOrg"
-                if (rc != 0) {
-                    error 'Salesforce dev hub org authorization failed.'
-                }
+           // echo 'got credentials'
+           // stage('Authorize DevHub') {
+           //     rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${KEYFILELOCATION}  --setdefaultdevhubusername --setalias HubOrg"
+           //     if (rc != 0) {
+           //         error 'Salesforce dev hub org authorization failed.'
+           //     }
+           // }
+
+            stage('Create Scratch Org'){
+            echo 'combining hub grant and creation of scratchorg'
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_INSTANCE_URL}"
+            if (rc != 0) { error 'hub org authorization failed' }
+
+            // need to pull out assigned username
+            rmsg = sh returnStdout: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername --setalias ciorg --wait 10 --durationdays 1 --type scratch"
+            printf rmsg
+            def jsonSlurper = new JsonSlurperClassic()
+            def robj = jsonSlurper.parseText(rmsg)
+            if (robj.status ! 0) { error 'org creation failed: ' + robj.message }
+            SFDC_USERNAME=robj.result.username
+            robj = null
             }
-
-
             // -------------------------------------------------------------------------
             // Create new scratch org to test your code.
             // -------------------------------------------------------------------------
