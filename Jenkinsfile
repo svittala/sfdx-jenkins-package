@@ -11,6 +11,7 @@ node {
     def PACKAGE_NAME='0Hof4000000KywZCAS'
     def PACKAGE_VERSION
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://login.salesforce.com"
+    def KEYFILELOCATION ='c:\sfdcwork\keys\server.key'
 
     def toolbelt = tool 'toolbelt'
 
@@ -41,7 +42,7 @@ node {
             // -------------------------------------------------------------------------
             echo 'got credentials'
             stage('Authorize DevHub') {
-                rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile c:\sfdcwork\keys\server.key --setdefaultdevhubusername --setalias HubOrg"
+                rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${KEYFILELOCATION}  --setdefaultdevhubusername --setalias HubOrg"
                 if (rc != 0) {
                     error 'Salesforce dev hub org authorization failed.'
                 }
