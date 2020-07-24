@@ -4,7 +4,7 @@
     "features": ["ServiceCloud"],
     "settings": {
         "omniChannelSettings": {
-            "enableOmniChannel": true
+            "enableOmniChannel": false
         },
         "caseSettings": {
             "systemUserEmail": "support@acme.com"
