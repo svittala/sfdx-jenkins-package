@@ -5,16 +5,15 @@ import groovy.json.JsonSlurperClassic
 node {
 
     def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME
-    def HUB_ORG=env.SF_USERNAME
+    def SF_USERNAME=env.SF_USERNAME
     def SERVER_KEY_CREDENTALS_ID=env.SERVER_KEY_CREDENTALS_ID
     def TEST_LEVEL='RunLocalTests'
-    def PACKAGE_NAME='0Hof4000000KywZCAS'
+    def PACKAGE_NAME='0Ho1U000000CaUzSAK'
     def PACKAGE_VERSION
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://login.salesforce.com"
-    def KEYFILELOCATION ='c:\\sfdcwork\\keys\\server.key'
 
     def toolbelt = tool 'toolbelt'
+
 
     // -------------------------------------------------------------------------
     // Check out code from source control.
@@ -24,57 +23,39 @@ node {
         checkout scm
     }
 
+
     // -------------------------------------------------------------------------
     // Run all the enclosed stages with access to the Salesforce
     // JWT key credentials.
     // -------------------------------------------------------------------------
     
     withEnv(["HOME=${env.WORKSPACE}"]) {
-        echo 'got here'
-        println SF_INSTANCE_URL
-        println SF_CONSUMER_KEY
-        println SF_USERNAME
-        println SERVER_KEY_CREDENTALS_ID
-           
+        
         withCredentials([file(credentialsId: SERVER_KEY_CREDENTALS_ID, variable: 'server_key_file')]) {
 
             // -------------------------------------------------------------------------
             // Authorize the Dev Hub org with JWT key and give it an alias.
             // -------------------------------------------------------------------------
-           // echo 'got credentials'
-           // stage('Authorize DevHub') {
-           //     rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${KEYFILELOCATION}  --setdefaultdevhubusername --setalias HubOrg"
-           //     if (rc != 0) {
-           //         error 'Salesforce dev hub org authorization failed.'
-           //     }
-           // }
-
-            stage('Create Scratch Org'){
-            echo 'combining hub grant and creation of scratchorg'
-            rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --instanceurl ${SF_INSTANCE_URL} --setalias HubOrg"
-            if (rc != 0) { error 'hub org authorization failed' }
-            echo 'got the grant done'
-            // need to pull out assigned username
-            rmsg = command "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername --setalias ciorg --wait 10 --durationdays 1 --type scratch --targetdevhubusername HubOrg"
-            printf rmsg
-
-            def jsonSlurper = new JsonSlurperClassic()
-            def robj = jsonSlurper.parseText(rmsg)
-            if (robj.status != 0) { error 'org creation failed: ' + robj.message }
-            SFDC_USERNAME=robj.result.username
-            robj = null
+            println 'with cred loop'
+            stage('Authorize DevHub') {
+                rc = command "${toolbelt}/sfdx force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --setalias HubOrg"
+                if (rc != 0) {
+                    error 'Salesforce dev hub org authorization failed.'
+                }
             }
+            println rc
+
             // -------------------------------------------------------------------------
             // Create new scratch org to test your code.
             // -------------------------------------------------------------------------
 
-           // stage('Create Test Scratch Org') {
-             //   rc = command "${toolbelt}/sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --jwtkeyfile ${KEYFILELOCATION} --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 --type scratch"
-               // if (rc != 0) {
-             //       error 'Salesforce test scratch org creation failed.'
-               // }
-           // }
-
+            stage('Create Test Scratch Org') {
+                rc = command "${toolbelt}/sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
+                if (rc != 0) {
+                    error 'Salesforce test scratch org creation failed.'
+                }
+            }
+            println rc
 
             // -------------------------------------------------------------------------
             // Display test scratch org info.
@@ -116,12 +97,12 @@ node {
             // Delete test scratch org.
             // -------------------------------------------------------------------------
 
-           // stage('Delete Test Scratch Org') {
-           //     rc = command "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
-           //     if (rc != 0) {
-           //         error 'Salesforce test scratch org deletion failed.'
-           //     }
-           // }
+            stage('Delete Test Scratch Org') {
+                rc = command "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
+                if (rc != 0) {
+                    error 'Salesforce test scratch org deletion failed.'
+                }
+            }
 
 
             // -------------------------------------------------------------------------
