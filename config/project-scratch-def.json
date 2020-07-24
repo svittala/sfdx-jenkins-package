@@ -1,14 +1,8 @@
 {
     "orgName": "CI Example",
     "edition": "Developer",
-    "features": ["Communities", "ServiceCloud"],
+    "features": ["ServiceCloud"],
     "settings": {
-        "communitiesSettings": {
-            "enableNetworksEnabled": true
-        },
-        "mobileSettings": {
-            "enableS1EncryptedStoragePref2": true
-        },
         "omniChannelSettings": {
             "enableOmniChannel": true
         },
