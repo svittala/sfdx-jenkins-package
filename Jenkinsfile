@@ -13,15 +13,7 @@ node {
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://login.salesforce.com"
 
     def toolbelt = tool 'toolbelt'
-// -- helps with the mac keychain issue
-    rc = command "export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true"
-    rc= command "export SFDX_AUTOUPDATE_DISABLE=false"
-    rc= command "export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true"
-    rc= command "export SFDX_DOMAIN_RETRY=300"
-    rc= command "export SFDX_DISABLE_APP_HUB=true"
-    rc= command "export SFDX_LOG_LEVEL=DEBUG"
 
-    println rc    
 
     // -------------------------------------------------------------------------
     // Check out code from source control.
