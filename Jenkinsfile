@@ -42,26 +42,19 @@ node {
                 if (rc != 0) {
                     error 'Salesforce dev hub org authorization failed.'
                 }
-                println 'putting in the same stage'
-                rc = command "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 username=jenkinstestuser@example.org"
-                if (rc != 0) {
-                    error 'Salesforce test scratch org creation failed.'
-                }
-
             }
             println rc
-
             // -------------------------------------------------------------------------
             // Create new scratch org to test your code.
             // -------------------------------------------------------------------------
 
-            //stage('Create Test Scratch Org') {
-            //    rc = command "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 username=jenkinstestuser@example.org"
-           //     if (rc != 0) {
-           //         error 'Salesforce test scratch org creation failed.'
-           //     }
-           // }
-          //  println rc
+            stage('Create Test Scratch Org') {
+/                rc = command "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1 username=svittala@jenkins_202007.org"
+                if (rc != 0) {
+                    error 'Salesforce test scratch org creation failed.'
+                }
+            }
+             println rc
 
             // -------------------------------------------------------------------------
             // Display test scratch org info.
