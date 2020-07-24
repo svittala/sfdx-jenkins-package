@@ -1,9 +1,19 @@
 {
     "orgName": "CI Example",
     "edition": "Developer",
-    "settings" : {
-        "lightningExperienceSettings": {
-            "enableS1DesktopEnabled":true
+    "features": ["Communities", "ServiceCloud"],
+    "settings": {
+        "communitiesSettings": {
+            "enableNetworksEnabled": true
+        },
+        "mobileSettings": {
+            "enableS1EncryptedStoragePref2": true
+        },
+        "omniChannelSettings": {
+            "enableOmniChannel": true
+        },
+        "caseSettings": {
+            "systemUserEmail": "support@acme.com"
         }
     }
 }
